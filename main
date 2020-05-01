@@ -1,0 +1,75 @@
+#!/bin/pwsh
+
+$addonfolder = "$HOME/Games/world-of-warcraft/drive_c/Program Files (x86)/World of Warcraft/_retail_/Interface/AddOns/"
+
+
+$test = Test-Path $HOME/addons
+if ($test -like "False"){
+    New-Item -ItemType Directory -Name $HOME/addons
+}
+
+Set-Location $HOME\addons
+Remove-Item -Force -Recurse $HOME/addons/.temp_download
+New-Item -ItemType Directory -Name ./.temp_download
+
+
+
+
+
+
+
+$details    =   'https://github.com/Tercioo/Details-Damage-Meter.git'
+$wa         =   'https://github.com/WeakAuras/WeakAuras2.git'
+$dbm        =   'https://github.com/DeadlyBossMods/DeadlyBossMods.git'
+$simc       =   'https://github.com/simulationcraft/simc-addon.git'
+$mdt        =   'https://github.com/Nnoggie/MethodDungeonTools.git'
+
+
+
+function update-details {
+    Set-Location $HOME/addons/.temp_download
+    git clone $details
+    Copy-Item ./* $addonfolder -Recurse -Force
+    Remove-Item ./* -Force -Recurse
+}
+
+function update-wa {
+    Set-Location $HOME/addons/.temp_download
+    git clone $wa
+    Set-Location (Get-ChildItem).name
+    $files = 'WeakAuras','WeakAurasModelPaths','WeakAurasTemplates','WeakAurasOptions'
+    foreach ($file in $files){
+        Copy-Item $file $addonfolder -recurse -Force
+    }
+    Set-Location $HOME/addons/.temp_download
+    Remove-Item ./* -Force -Recurse
+}
+
+function update-dbm {
+    Set-Location $HOME/addons/.temp_download
+    git clone $dbm
+    Set-Location (Get-ChildItem).name
+    Copy-Item ./DBM* $addonfolder -Recurse -Force
+    Set-Location $HOME/addons/.temp_download
+    Remove-Item ./* -Force -Recurse    
+}
+
+function update-simc {
+    Set-Location $HOME/addons/.temp_download
+    git clone $simc
+    Copy-Item ./* $addonfolder -Recurse -Force
+    Remove-Item ./* -Force -Recurse
+}
+
+function update-mdt {
+    Set-Location $HOME/addons/.temp_download
+    git clone $mdt
+    Copy-Item ./* $addonfolder -Recurse -Force
+    Remove-Item ./* -Force -Recurse
+}
+
+update-simc
+update-dbm
+update-wa
+update-details
+update-mdt
